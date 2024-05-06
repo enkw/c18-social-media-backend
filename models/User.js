@@ -9,7 +9,7 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
     },
-    // Includes regex to makesure email is valid
+    // Includes regex to make sure email is valid
     email: {
       type: String,
       required: true,
@@ -17,12 +17,12 @@ const userSchema = new Schema(
       match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email address']
     },
     thoughts: [{
-      type: ,
-      ref: ,
+      type: Schema.Types.ObjectId,
+      ref: 'thought',
     }],
     friends: [{
-      type: ,
-      ref: ,
+      type: Schema.Types.ObjectId,
+      ref: 'user',
     }],
   },
   {
