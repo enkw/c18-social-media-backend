@@ -67,7 +67,7 @@ module.exports = {
         });
 
       if (!user) {
-        return res.status(404).json({ message: 'No user with ID that found.' })
+        return res.status(404).json({ message: 'No user with that ID found.' })
       }
 
       res.status(200).json(user);
