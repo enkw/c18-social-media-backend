@@ -32,7 +32,7 @@ module.exports = {
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
-      res.json(User);
+      res.status(200).json(User);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -46,7 +46,9 @@ module.exports = {
         return res.status(404).json({ message: 'No user with that ID found.' });
       }
 
-      res.json({ message: 'User successfully deleted' });
+      await Thought.deleteMany({ _id: { $in: user.thoughts } });
+
+      res.status(200).json(user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -65,8 +67,51 @@ module.exports = {
         });
 
       if (!user) {
-        return res.status(404).json({ message: 'No user with ID found' })
+        return res.status(404).json({ message: 'No user with ID that found.' })
       }
+
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  // Add a friend
+  async addFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $push: { friends: req.params.friendId } },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID found.'})
+      }
+
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  // Delete a friend
+  async removeFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID found.'})
+      }
+
       res.status(200).json(user);
     } catch (err) {
       res.status(500).json(err);
